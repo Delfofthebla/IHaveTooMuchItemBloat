@@ -25,7 +25,7 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
 {
     public const string Guid = "com.Delfofthebla.IHaveTooMuchItemBloat";
     public const string Name = "IHaveTooMuchItemBloat";
-    public const string Version = "0.1.0";
+    public const string Version = "1.0.0";
 
     internal static ManualLogSource Log { get; private set; }
     internal static Settings Settings { get; private set; }

@@ -1,6 +1,6 @@
 {
   "name": "I_Have_Too_Much_Item_Bloat",
-  "version_number": "0.1.0",
+  "version_number": "1.0.0",
   "website_url": "https://github.com/Delfofthebla/IHaveTooMuchItemBloat",
   "description": "Item pool controls for heavily modded runs. Wish for items at a Shrine of Wishes; wished items grow likelier to drop until they are granted.",
   "dependencies": [
