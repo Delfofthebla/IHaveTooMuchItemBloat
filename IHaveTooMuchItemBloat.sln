@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IHaveTooMuchItemBloat", "IHaveTooMuchItemBloat\IHaveTooMuchItemBloat.csproj", "{C7D7E786-8C91-497E-9B17-003850B13385}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{FA510DA8-8FD1-4E0E-A353-8959A4DF4789}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		NuGet.config = NuGet.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{4D703EC5-9589-40F0-ABA0-004262025213}"
+	ProjectSection(SolutionItems) = preProject
+		docs\screenshots\.gitkeep = docs\screenshots\.gitkeep
+		docs\screenshots\WishHud.png = docs\screenshots\WishHud.png
+		docs\screenshots\WishPanel.png = docs\screenshots\WishPanel.png
+		docs\screenshots\WishShrine.png = docs\screenshots\WishShrine.png
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Debug|x64.Build.0 = Debug|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Debug|x86.Build.0 = Debug|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Release|x64.ActiveCfg = Release|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Release|x64.Build.0 = Release|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Release|x86.ActiveCfg = Release|Any CPU
+		{C7D7E786-8C91-497E-9B17-003850B13385}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4D703EC5-9589-40F0-ABA0-004262025213} = {FA510DA8-8FD1-4E0E-A353-8959A4DF4789}
+	EndGlobalSection
+EndGlobal

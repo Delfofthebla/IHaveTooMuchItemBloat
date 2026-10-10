@@ -1,0 +1,14 @@
+{
+  "name": "I_Have_Too_Much_Item_Bloat",
+  "version_number": "0.1.0",
+  "website_url": "https://github.com/Delfofthebla/IHaveTooMuchItemBloat",
+  "description": "Item pool controls for heavily modded runs. Wish for items at a Shrine of Wishes; wished items grow likelier to drop until they are granted.",
+  "dependencies": [
+    "bbepis-BepInExPack-5.4.2122",
+    "RiskofThunder-R2API_Core-5.3.0",
+    "RiskofThunder-R2API_Language-1.1.0",
+    "RiskofThunder-R2API_Prefab-1.1.1",
+    "RiskofThunder-R2API_Director-3.1.0",
+    "RiskofThunder-R2API_Items-1.0.8"
+  ]
+}

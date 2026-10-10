@@ -1,0 +1,43 @@
+<Project>
+  <PropertyGroup>
+    <IsThunderstorePackage Condition="'$(ThunderstorePackageName)' != ''">true</IsThunderstorePackage>
+    <ThunderstoreSourceDir>$(MSBuildProjectDirectory)\Thunderstore</ThunderstoreSourceDir>
+    <ProfileDeployDir>$(ProfilePluginsDir)\$(ThunderstoreTeam)-$(ThunderstorePackageName)</ProfileDeployDir>
+    <ProfilePatcherDeployDir>$(ProfileDir)\patchers\$(ThunderstoreTeam)-$(ThunderstorePackageName)</ProfilePatcherDeployDir>
+    <ThunderstoreStagingDir>$(MSBuildProjectDirectory)\obj\thunderstore</ThunderstoreStagingDir>
+    <ThunderstoreDistDir>$(MSBuildThisFileDirectory)dist</ThunderstoreDistDir>
+  </PropertyGroup>
+
+  <Target Name="VerifyVersions" BeforeTargets="Build" Condition="'$(IsThunderstorePackage)' == 'true'">
+    <PropertyGroup>
+      <ManifestVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(ThunderstoreSourceDir)\manifest.json')), '"version_number"\s*:\s*"([^"]*)"').Result('$1'))</ManifestVersion>
+      <PluginVersion Condition="'$(PluginVersionSource)' != ''">$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\$(PluginVersionSource)')), 'const string Version = "([^"]*)"').Result('$1'))</PluginVersion>
+    </PropertyGroup>
+    <Error Condition="'$(ManifestVersion)' != '$(Version)'" Text="manifest.json version_number ($(ManifestVersion)) does not match the project Version ($(Version))." />
+    <Error Condition="'$(PluginVersionSource)' != '' And '$(PluginVersion)' != '$(Version)'" Text="$(PluginVersionSource) Version ($(PluginVersion)) does not match the project Version ($(Version))." />
+  </Target>
+
+  <Target Name="CollectThunderstoreFiles">
+    <ItemGroup>
+      <ThunderstoreFile Include="$(ThunderstoreSourceDir)\*" />
+      <ThunderstoreFile Include="$(TargetPath)" />
+      <ThunderstorePatcherSymbols Include="@(ThunderstorePatcher->'%(RootDir)%(Directory)%(Filename).pdb')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="DeployToProfile" AfterTargets="Build" DependsOnTargets="CollectThunderstoreFiles" Condition="'$(IsThunderstorePackage)' == 'true' And Exists('$(ProfilePluginsDir)')">
+    <Copy SourceFiles="@(ThunderstoreFile);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProfileDeployDir)" SkipUnchangedFiles="true" Retries="0" ContinueOnError="WarnAndContinue" />
+    <Copy SourceFiles="@(ThunderstorePatcher);@(ThunderstorePatcherSymbols)" DestinationFolder="$(ProfilePatcherDeployDir)" SkipUnchangedFiles="true" Retries="0" ContinueOnError="WarnAndContinue" />
+    <Message Importance="high" Text="Deployed $(TargetName) to $(ProfileDeployDir)" />
+    <Message Importance="high" Condition="'@(ThunderstorePatcher)' != ''" Text="Deployed @(ThunderstorePatcher->'%(Filename)') to $(ProfilePatcherDeployDir)" />
+  </Target>
+
+  <Target Name="PackageThunderstore" AfterTargets="Build" DependsOnTargets="CollectThunderstoreFiles" Condition="'$(IsThunderstorePackage)' == 'true' And '$(Configuration)' == 'Release'">
+    <RemoveDir Directories="$(ThunderstoreStagingDir)" />
+    <Copy SourceFiles="@(ThunderstoreFile)" DestinationFolder="$(ThunderstoreStagingDir)" />
+    <Copy SourceFiles="@(ThunderstorePatcher)" DestinationFolder="$(ThunderstoreStagingDir)\patchers" />
+    <MakeDir Directories="$(ThunderstoreDistDir)" />
+    <ZipDirectory SourceDirectory="$(ThunderstoreStagingDir)" DestinationFile="$(ThunderstoreDistDir)\$(ThunderstoreTeam)-$(ThunderstorePackageName)-$(Version).zip" Overwrite="true" />
+    <Message Importance="high" Text="Packaged $(ThunderstoreDistDir)\$(ThunderstoreTeam)-$(ThunderstorePackageName)-$(Version).zip" />
+  </Target>
+</Project>
