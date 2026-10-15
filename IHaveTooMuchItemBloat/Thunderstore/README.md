@@ -129,7 +129,7 @@ no, but for now all I've got is this lazy vanilla asset swap. It's the best I ca
 Works with modded items: anything in the run's item pool can be offered and wished for.
 
 Wishes are saved with the run, so [ProperSave](https://thunderstore.io/package/KingEnderBrine/ProperSave/) keeps them.
-Changing your modlist between saving and loading can scramble them.
+If you remove a mod between saving and loading, wishes for its items are dropped.
 
 ## Your Shrine Looks Like Crap
 

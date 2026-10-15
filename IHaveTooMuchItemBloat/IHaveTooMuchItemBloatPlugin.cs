@@ -2,6 +2,7 @@ using BepInEx;
 using BepInEx.Logging;
 using IHaveTooMuchItemBloat.Debugging;
 using IHaveTooMuchItemBloat.Hud;
+using IHaveTooMuchItemBloat.Ledger;
 using IHaveTooMuchItemBloat.Patches;
 using IHaveTooMuchItemBloat.WishShrine;
 using IHaveTooMuchItemBloat.Wishes;
@@ -17,8 +18,8 @@ namespace IHaveTooMuchItemBloat;
 [BepInDependency(LanguageAPI.PluginGUID)]
 [BepInDependency(PrefabAPI.PluginGUID)]
 [BepInDependency(DirectorAPI.PluginGUID)]
-[BepInDependency(ItemAPI.PluginGUID)]
 [BepInDependency(RiskOfOptionsMenu.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(ProperSaveSupport.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
 // ReSharper disable once InconsistentNaming
 public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
@@ -40,9 +41,10 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
         Granter = new WishGranter(Settings, Wishes);
 
         Tokens.Register();
-        WishStorage.Register();
         Wishes.Granted += AnnounceGrantedWish;
 
+        Failsafe.Run("installing the run ledger", RunLedger.Install);
+        Failsafe.Run("hooking into ProperSave", ProperSaveSupport.Install);
         Failsafe.Run("hooking the stage RNG", StageRng.Install);
         Failsafe.Run("installing drop patches", InstallDropPatches);
         Failsafe.Run("building the Shrine of Wishes", InstallWishShrine);

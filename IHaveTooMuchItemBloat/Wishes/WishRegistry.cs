@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using IHaveTooMuchItemBloat.Ledger;
 using RoR2;
 
 namespace IHaveTooMuchItemBloat.Wishes;
@@ -11,20 +12,18 @@ internal sealed class WishRegistry
 
     public IReadOnlyList<Wish> Of(CharacterMaster master)
     {
-        var inventory = master ? master.inventory : null;
+        var ledger = RunLedger.Current;
 
-        return inventory
-            ? WishStorage.Read(inventory)
+        return ledger
+            ? ledger.WishesOf(master)
             : [];
     }
 
     public void Set(CharacterMaster master, IEnumerable<Wish> wishes)
     {
-        var inventory = master ? master.inventory : null;
-        if (!inventory)
-            return;
-
-        WishStorage.Write(inventory, [.. wishes.Take(WishStorage.Capacity)]);
+        var ledger = RunLedger.Current;
+        if (ledger)
+            ledger.SetWishes(master, wishes);
     }
 
     public void Place(CharacterMaster master, int slot, PickupIndex pickup)

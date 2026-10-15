@@ -19,7 +19,10 @@
         <PackageReference Include="R2API.Language" Version="1.1.0"/>
         <PackageReference Include="R2API.Prefab" Version="1.1.1"/>
         <PackageReference Include="R2API.Director" Version="3.1.2"/>
-        <PackageReference Include="R2API.Items" Version="1.0.8"/>
         <PackageReference Include="Rune580.Mods.RiskOfRain2.RiskOfOptions" Version="2.8.6"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="ProperSave" HintPath="$(ProfilePluginsDir)\KingEnderBrine-ProperSave\ProperSave\ProperSave.dll"/>
     </ItemGroup>
 </Project>
