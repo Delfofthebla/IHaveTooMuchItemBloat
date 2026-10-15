@@ -17,11 +17,15 @@ internal static class DropPools
     public static readonly DropPool VoidLegendary = Items("Void Legendary", ColorCatalog.ColorIndex.VoidItem, ItemTier.VoidTier3, run => run.availableVoidTier3DropList);
     public static readonly DropPool VoidBoss = Items("Void Boss", ColorCatalog.ColorIndex.VoidItem, ItemTier.VoidBoss, run => run.availableVoidBossDropList);
 
-    public static readonly DropPool Equipment = new("Equipment", ColorCatalog.ColorIndex.Equipment,
+    public static readonly DropPool Equipment = new(
+        "Equipment",
+        ColorCatalog.ColorIndex.Equipment,
         run => run.availableEquipmentDropList,
         pickup => pickup.equipmentIndex != EquipmentIndex.None && !pickup.isLunar);
 
-    public static readonly DropPool LunarEquipment = new("Lunar Equipment", ColorCatalog.ColorIndex.LunarItem,
+    public static readonly DropPool LunarEquipment = new(
+        "Lunar Equipment",
+        ColorCatalog.ColorIndex.LunarItem,
         run => run.availableLunarEquipmentDropList,
         pickup => pickup.equipmentIndex != EquipmentIndex.None && pickup.isLunar);
 

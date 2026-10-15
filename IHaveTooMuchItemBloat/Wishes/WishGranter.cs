@@ -45,10 +45,7 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
     private List<(Wish Wish, WishOdds Odds)> CandidatesFor(Run run, DropPool tier, DropTableWeights source, IReadOnlyList<Wish> held, List<PickupIndex> rolled)
     {
         var sourceTier = source.Within(tier);
-        var eligible = held
-            .Where(wish => tier.Matches(wish.Pickup) && sourceTier.CanDrop(wish.Pickup) && !rolled.Contains(wish.Pickup))
-            .OrderByDescending(wish => wish.Desperation)
-            .ToList();
+        var eligible = held.Where(wish => tier.Matches(wish.Pickup) && sourceTier.CanDrop(wish.Pickup) && !rolled.Contains(wish.Pickup)).OrderByDescending(wish => wish.Desperation).ToList();
         if (eligible.Count == 0)
             return [];
 
@@ -58,8 +55,12 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
     }
 
     private GenericPickupController.CreatePickupInfo RollSwaps(
-        CharacterMaster recipient, PickupDropTable table, GenericPickupController.CreatePickupInfo pickupInfo,
-        int slot, PickupIndex rolled, List<(Wish Wish, WishOdds Odds)> candidates)
+        CharacterMaster recipient,
+        PickupDropTable table,
+        GenericPickupController.CreatePickupInfo pickupInfo,
+        int slot,
+        PickupIndex rolled,
+        List<(Wish Wish, WishOdds Odds)> candidates)
     {
         foreach (var candidate in candidates)
         {
@@ -76,7 +77,9 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
 
     private bool RollSwap(CharacterMaster recipient, PickupDropTable table, PickupIndex rolled, Wish wish, WishOdds odds)
     {
-        var chance = settings.AlwaysGrantWishes.Value ? 1f : odds.SwapChanceAt(wish.Desperation);
+        var chance = settings.AlwaysGrantWishes.Value
+            ? 1f
+            : odds.SwapChanceAt(wish.Desperation);
         var granted = StageRng.WishRolls.nextNormalizedFloat < chance;
 
         LogRoll(recipient, table, rolled, wish, odds, chance, granted);
@@ -121,9 +124,7 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
 
     private void PassOnDesperation(CharacterMaster recipient, DropPool tier, Wish granted, List<Wish> drops)
     {
-        var heirs = wishes.Of(recipient)
-            .Where(wish => tier.Matches(wish.Pickup) && drops.All(dropped => dropped.Pickup != wish.Pickup))
-            .ToList();
+        var heirs = wishes.Of(recipient).Where(wish => IsHeir(wish, tier, drops)).ToList();
         if (heirs.Count == 0)
             return;
 
@@ -131,6 +132,8 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
         foreach (var heir in heirs)
             wishes.AddDesperation(recipient, heir.Pickup, share);
     }
+
+    private static bool IsHeir(Wish wish, DropPool tier, List<Wish> drops) => tier.Matches(wish.Pickup) && drops.All(dropped => dropped.Pickup != wish.Pickup);
 
     private void SpreadDesperation(CharacterMaster recipient, List<(Wish Wish, WishOdds Odds)> candidates)
     {
@@ -178,10 +181,9 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
             return;
 
         IHaveTooMuchItemBloatPlugin.Log.LogInfo(
-            $"Wish roll for {Players.NameOf(recipient)} from {table.name}: rolled {PickupNames.Display(rolled)}; " +
-            $"wish for {PickupNames.Display(wish.Pickup)} at {wish.Desperation:0.##} desperation " +
-            $"of {odds.GuaranteedAt:0.##} (natural {odds.NaturalChance:P2}, vanilla {odds.VanillaChance:P2}, wish {odds.ChanceAt(wish.Desperation):P2}, {odds.DesperationPerMiss:0.##} desperation per miss) " +
-            $"had a {chance:P2} swap chance and {(granted ? "was granted" : "missed")}.");
+            $"Wish roll for {Players.NameOf(recipient)} from {table.name}: rolled {PickupNames.Display(rolled)}; "
+                + $"wish for {PickupNames.Display(wish.Pickup)} at {wish.Desperation:0.##} desperation of {odds.GuaranteedAt:0.##} (natural {odds.NaturalChance:P2}, vanilla {odds.VanillaChance:P2}, "
+                + $"wish {odds.ChanceAt(wish.Desperation):P2}, {odds.DesperationPerMiss:0.##} desperation per miss) had a {chance:P2} swap chance and {(granted ? "was granted" : "missed")}.");
     }
 
     private void LogNaturalGrant(CharacterMaster recipient, Wish wish, NaturalDropBehavior behavior)

@@ -10,8 +10,8 @@ namespace IHaveTooMuchItemBloat.WishShrine;
 
 internal sealed class WishShrineController : PickupPickerController, IInteractable
 {
-    private const byte CancelMessage = 1;
-    private const byte ConfirmMessage = 2;
+    private const byte CANCEL_MESSAGE = 1;
+    private const byte CONFIRM_MESSAGE = 2;
 
     private IReadOnlyList<Wish> _participantWishes = [];
     private PickupIndex _stagedPickup = PickupIndex.none;
@@ -35,8 +35,11 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
         {
             var participant = networkUIPromptController.currentParticipantMaster;
             var price = State.PriceFor(participant, Purchase.cost);
+            var participantBody = participant
+                ? participant.GetBody()
+                : null;
 
-            return TeamManager.AdjustCostForLongstandingSolitude(Purchase.costType, price, participant ? participant.GetBody() : null);
+            return TeamManager.AdjustCostForLongstandingSolitude(Purchase.costType, price, participantBody);
         }
     }
 
@@ -51,7 +54,9 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
             if (current == PickupIndex.none)
                 return WishAction.NewWish;
 
-            return current == _stagedPickup ? WishAction.Strengthen : WishAction.Replace;
+            return current == _stagedPickup
+                ? WishAction.Strengthen
+                : WishAction.Replace;
         }
     }
 
@@ -61,7 +66,9 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
 
     private PurchaseInteraction Purchase => _purchase ??= GetComponent<PurchaseInteraction>();
 
-    public PickupIndex ShownIn(int slot) => slot == FocusedSlot && _stagedPickup != PickupIndex.none ? _stagedPickup : WishedIn(slot);
+    public PickupIndex ShownIn(int slot) => slot == FocusedSlot && _stagedPickup != PickupIndex.none
+        ? _stagedPickup
+        : WishedIn(slot);
 
     public bool IsExhaustedFor(CharacterMaster master) => State.IsExhaustedFor(master);
 
@@ -109,7 +116,9 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
             return;
 
         var pickup = options[optionIndex].pickup.pickupIndex;
-        _stagedPickup = _stagedPickup == pickup ? PickupIndex.none : pickup;
+        _stagedPickup = _stagedPickup == pickup
+            ? PickupIndex.none
+            : pickup;
 
         RefreshPanel();
     }
@@ -126,7 +135,7 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
         }
 
         var writer = networkUIPromptController.BeginMessageToServer();
-        writer.Write(ConfirmMessage);
+        writer.Write(CONFIRM_MESSAGE);
         writer.WritePackedUInt32((uint)FocusedSlot);
         writer.Write(_stagedPickup.value);
         networkUIPromptController.FinishMessageToServer(writer);
@@ -136,10 +145,10 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
     {
         switch (reader.ReadByte())
         {
-            case CancelMessage:
+            case CANCEL_MESSAGE:
                 networkUIPromptController.SetParticipantMaster(null);
                 break;
-            case ConfirmMessage:
+            case CONFIRM_MESSAGE:
                 var slot = (int)reader.ReadPackedUInt32();
                 var pickup = new PickupIndex(reader.ReadInt32());
                 MakeWish(networkUIPromptController.currentParticipantMaster, slot, pickup);
@@ -191,7 +200,9 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
         return 0;
     }
 
-    private PickupIndex WishedIn(int slot) => (uint)slot < _participantWishes.Count ? _participantWishes[slot].Pickup : PickupIndex.none;
+    private PickupIndex WishedIn(int slot) => (uint)slot < _participantWishes.Count
+        ? _participantWishes[slot].Pickup
+        : PickupIndex.none;
 
     private void RefreshPanel()
     {
@@ -227,7 +238,9 @@ internal sealed class WishShrineController : PickupPickerController, IInteractab
     private bool TryPay(CharacterMaster master)
     {
         var body = master.GetBody();
-        var interactor = body ? body.GetComponent<Interactor>() : null;
+        var interactor = body
+            ? body.GetComponent<Interactor>()
+            : null;
 
         return interactor && WishShrinePurchase.TryPay(Purchase, interactor, master);
     }

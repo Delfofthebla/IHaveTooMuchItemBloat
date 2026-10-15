@@ -5,7 +5,7 @@ namespace IHaveTooMuchItemBloat;
 
 internal static class Failsafe
 {
-    private static readonly HashSet<string> ReportedFailures = [];
+    private static readonly HashSet<string> _reportedFailures = [];
 
     public static void Run(string task, Action action)
     {
@@ -32,11 +32,13 @@ internal static class Failsafe
         }
     }
 
-    public static Action<T> Handler<T>(string task, Action<T> handler) => argument => Run(task, () => handler(argument));
+    public static Action<T> Handler<T>(string task, Action<T> handler) => argument => Handle(task, handler, argument);
+
+    private static void Handle<T>(string task, Action<T> handler, T argument) => Run(task, () => handler(argument));
 
     private static void Report(string task, Exception exception)
     {
-        if (ReportedFailures.Add(task + exception.GetType().FullName))
+        if (_reportedFailures.Add(task + exception.GetType().FullName))
             IHaveTooMuchItemBloatPlugin.Log.LogError($"Failed {task}: {exception}");
     }
 }

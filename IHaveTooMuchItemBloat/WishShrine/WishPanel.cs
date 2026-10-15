@@ -9,13 +9,13 @@ namespace IHaveTooMuchItemBloat.WishShrine;
 
 internal sealed class WishPanel : MonoBehaviour
 {
-    public const string FocusOutlineName = "FocusOutline";
+    public static readonly string FocusOutlineName = "FocusOutline";
 
-    private const float UnfocusedAlpha = 0.35f;
-    private const float FocusedScale = 1.1f;
+    private static readonly float UnfocusedAlpha = 0.35f;
+    private static readonly float FocusedScale = 1.1f;
 
     private static readonly Color EmptySlotColor = new(0.5f, 0.5f, 0.5f);
-    private static readonly StringBuilder PriceText = new();
+    private static readonly StringBuilder _priceText = new();
 
     public RectTransform slotContainer;
     public GameObject slotPrefab;
@@ -79,7 +79,9 @@ internal sealed class WishPanel : MonoBehaviour
             icon.enabled = icon.sprite;
         }
 
-        var tierColor = pickupDef != null ? pickupDef.baseColor : EmptySlotColor;
+        var tierColor = pickupDef != null
+            ? pickupDef.baseColor
+            : EmptySlotColor;
         tierColor.a = focused ? 1f : UnfocusedAlpha;
 
         if (slot.TryGetComponent(out Image background))
@@ -97,9 +99,13 @@ internal sealed class WishPanel : MonoBehaviour
     private static Image IconOf(MPButton slot)
     {
         var childLocator = slot.GetComponent<ChildLocator>();
-        var icon = childLocator ? childLocator.FindChild("Icon") : null;
+        var icon = childLocator
+            ? childLocator.FindChild("Icon")
+            : null;
 
-        return icon ? icon.GetComponent<Image>() : null;
+        return icon
+            ? icon.GetComponent<Image>()
+            : null;
     }
 
     private void ShowPrice()
@@ -107,17 +113,17 @@ internal sealed class WishPanel : MonoBehaviour
         if (!priceLabel)
             return;
 
-        PriceText.Clear();
-        _controller.CostType.BuildCostStringStyled(_controller.Price, PriceText, forWorldDisplay: false);
+        _priceText.Clear();
+        _controller.CostType.BuildCostStringStyled(_controller.Price, _priceText, forWorldDisplay: false);
 
-        priceLabel.SetText(PriceText);
+        priceLabel.SetText(_priceText);
     }
 
     private static string ConfirmTokenFor(WishAction action) => action switch
     {
-        WishAction.Strengthen => Tokens.CONFIRM_STRENGTHEN,
-        WishAction.Replace => Tokens.CONFIRM_REPLACE,
-        _ => Tokens.CONFIRM_WISH,
+        WishAction.Strengthen => Tokens.ConfirmStrengthen,
+        WishAction.Replace => Tokens.ConfirmReplace,
+        _ => Tokens.ConfirmWish,
     };
 
     private void Confirm()

@@ -7,9 +7,9 @@ namespace IHaveTooMuchItemBloat;
 
 internal static class Hooks
 {
-    private const BindingFlags AnyMethod = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+    private static readonly BindingFlags AnyMethod = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
-    private static readonly List<Hook> Installed = [];
+    private static readonly List<Hook> _installed = [];
 
     public static bool Install(Type type, string methodName, Type[] parameterTypes, Delegate hook)
     {
@@ -24,7 +24,7 @@ internal static class Hooks
 
         try
         {
-            Installed.Add(new Hook(method, hook));
+            _installed.Add(new Hook(method, hook));
             return true;
         }
         catch (Exception exception)

@@ -13,16 +13,16 @@ namespace IHaveTooMuchItemBloat.WishShrine;
 
 internal static class WishShrineAssets
 {
-    private const string ShrineOfChancePrefab = "RoR2/Base/ShrineChance/ShrineChance.prefab";
-    private const string ShrineOfCombatPrefab = "RoR2/Base/ShrineCombat/ShrineCombat.prefab";
-    private const string ShrineOfCombatSpawnCard = "RoR2/Base/ShrineCombat/iscShrineCombat.asset";
-    private const string ShrineOfTheMountainPrefab = "RoR2/Base/ShrineBoss/ShrineBoss.prefab";
-    private const string GreenColorRamp = "RoR2/Base/Common/ColorRamps/texRampHealing.png";
-    private const string CraftingPanelPrefab = "RoR2/DLC3/MealPrep/MealPrepPickerPanel.prefab";
-    private const string RecipeBackgroundPath = "MainPanel/Juice/BGContainer/CraftingContainer/Background";
-    private const string PanelTitlePath = "MainPanel/Juice/LabelContainer/Label";
-    private const string SymbolPath = "Symbol";
-    private const string HoverOutlinePath = "HoverOutline";
+    private static readonly string ShrineOfChancePrefab = "RoR2/Base/ShrineChance/ShrineChance.prefab";
+    private static readonly string ShrineOfCombatPrefab = "RoR2/Base/ShrineCombat/ShrineCombat.prefab";
+    private static readonly string ShrineOfCombatSpawnCard = "RoR2/Base/ShrineCombat/iscShrineCombat.asset";
+    private static readonly string ShrineOfTheMountainPrefab = "RoR2/Base/ShrineBoss/ShrineBoss.prefab";
+    private static readonly string GreenColorRamp = "RoR2/Base/Common/ColorRamps/texRampHealing.png";
+    private static readonly string CraftingPanelPrefab = "RoR2/DLC3/MealPrep/MealPrepPickerPanel.prefab";
+    private static readonly string RecipeBackgroundPath = "MainPanel/Juice/BGContainer/CraftingContainer/Background";
+    private static readonly string PanelTitlePath = "MainPanel/Juice/LabelContainer/Label";
+    private static readonly string SymbolPath = "Symbol";
+    private static readonly string HoverOutlinePath = "HoverOutline";
 
     private static readonly Vector2 PriceLabelSize = new(200f, 36f);
 
@@ -50,8 +50,7 @@ internal static class WishShrineAssets
         purchase.Networkcost = Run.instance.GetDifficultyScaledCost(purchase.cost);
     }
 
-    private static void ApplyBaseCost(Settings settings)
-        => ShrinePrefab.GetComponent<PurchaseInteraction>().cost = settings.WishShrineBaseCost.Value;
+    private static void ApplyBaseCost(Settings settings) => ShrinePrefab.GetComponent<PurchaseInteraction>().cost = settings.WishShrineBaseCost.Value;
 
     private static GameObject BuildPanel()
     {
@@ -68,11 +67,11 @@ internal static class WishShrineAssets
         Object.DestroyImmediate(craftingPanel);
 
         var recipeBackground = panel.transform.Find(RecipeBackgroundPath);
-        Hide(recipeBackground ? recipeBackground.Find("Arrow") : null);
-        Hide(recipeBackground ? recipeBackground.Find("Result/Holder") : null);
+        Hide(FindIn(recipeBackground, "Arrow"));
+        Hide(FindIn(recipeBackground, "Result/Holder"));
 
-        SetToken(panel.transform.Find(PanelTitlePath), Tokens.PANEL_TITLE);
-        SetToken(wishPanel.confirmButton ? wishPanel.confirmButton.transform : null, Tokens.CONFIRM_WISH);
+        SetToken(panel.transform.Find(PanelTitlePath), Tokens.PanelTitle);
+        SetToken(wishPanel.confirmButton ? wishPanel.confirmButton.transform : null, Tokens.ConfirmWish);
 
         wishPanel.priceLabel = BuildPriceLabel(wishPanel.confirmButton);
         AddFocusOutline(wishPanel.slotPrefab);
@@ -82,7 +81,9 @@ internal static class WishShrineAssets
 
     private static TextMeshProUGUI BuildPriceLabel(MPButton confirmButton)
     {
-        var buttonText = confirmButton ? confirmButton.GetComponentInChildren<TextMeshProUGUI>(includeInactive: true) : null;
+        var buttonText = confirmButton
+            ? confirmButton.GetComponentInChildren<TextMeshProUGUI>(includeInactive: true)
+            : null;
         if (!buttonText)
             return null;
 
@@ -149,8 +150,8 @@ internal static class WishShrineAssets
     private static void ConfigurePurchase(GameObject shrine)
     {
         var purchase = shrine.GetComponent<PurchaseInteraction>();
-        purchase.displayNameToken = Tokens.WISH_SHRINE_NAME;
-        purchase.contextToken = Tokens.WISH_SHRINE_CONTEXT;
+        purchase.displayNameToken = Tokens.WishShrineName;
+        purchase.contextToken = Tokens.WishShrineContext;
         purchase.costType = CostTypeIndex.Money;
         purchase.automaticallyScaleCostWithDifficulty = false;
         purchase.saleStarCompatible = false;
@@ -160,7 +161,7 @@ internal static class WishShrineAssets
         purchase.onDetailedPurchaseServer = new DetailedPurchaseEvent();
 
         if (shrine.TryGetComponent(out GenericDisplayNameProvider displayName))
-            displayName.displayToken = Tokens.WISH_SHRINE_NAME;
+            displayName.displayToken = Tokens.WishShrineName;
     }
 
     private static void AddPriceHologram(GameObject shrine, GameObject shrineOfChance)
@@ -182,7 +183,9 @@ internal static class WishShrineAssets
 
     private static GameObject WishMadeEffectFrom(GameObject shrineOfChance)
     {
-        var behavior = shrineOfChance ? shrineOfChance.GetComponent<ShrineChanceBehavior>() : null;
+        var behavior = shrineOfChance
+            ? shrineOfChance.GetComponent<ShrineChanceBehavior>()
+            : null;
 
         return behavior ? behavior.effectPrefabShrineRewardNormal : null;
     }
@@ -238,7 +241,13 @@ internal static class WishShrineAssets
         return spawnCard;
     }
 
-    private static Transform FindIn(GameObject root, string path) => root ? root.transform.Find(path) : null;
+    private static Transform FindIn(GameObject root, string path) => root
+        ? root.transform.Find(path)
+        : null;
+
+    private static Transform FindIn(Transform root, string path) => root
+        ? root.Find(path)
+        : null;
 
     private static void Hide(Transform transform)
     {

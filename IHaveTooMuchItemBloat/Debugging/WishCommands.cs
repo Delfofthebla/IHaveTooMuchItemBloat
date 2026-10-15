@@ -12,7 +12,10 @@ namespace IHaveTooMuchItemBloat.Debugging;
 
 internal static class WishCommands
 {
-    [ConCommand(commandName = "itmb_wish", flags = ConVarFlags.ExecuteOnServer, helpText = "Replaces your wishes with fresh ones for the named items, by internal or display name (spaces and punctuation ignored). With no names, shows your wishes.")]
+    [ConCommand(
+        commandName = "itmb_wish",
+        flags = ConVarFlags.ExecuteOnServer,
+        helpText = "Replaces your wishes with fresh ones for the named items, by internal or display name (spaces and punctuation ignored). With no names, shows your wishes.")]
     private static void Wish(ConCommandArgs args)
     {
         var master = EnabledSenderMaster(args);
@@ -25,9 +28,9 @@ internal static class WishCommands
             return;
         }
 
-        if (args.Count > WishStorage.CAPACITY)
+        if (args.Count > WishStorage.Capacity)
         {
-            Debug.LogWarning($"At most {WishStorage.CAPACITY} wishes can be held.");
+            Debug.LogWarning($"At most {WishStorage.Capacity} wishes can be held.");
             return;
         }
 
@@ -59,7 +62,9 @@ internal static class WishCommands
         Debug.Log("Your wishes were cleared.");
     }
 
-    [ConCommand(commandName = "itmb_wish_odds", flags = ConVarFlags.ExecuteOnServer,
+    [ConCommand(
+        commandName = "itmb_wish_odds",
+        flags = ConVarFlags.ExecuteOnServer,
         helpText = "Shows each drop pool's size by content pack and a fresh wish's odds for one of its vanilla items on a regular drop.")]
     private static void ShowOdds(ConCommandArgs args)
     {
@@ -74,7 +79,9 @@ internal static class WishCommands
     private static void SpawnWishShrine(ConCommandArgs args)
     {
         var master = EnabledSenderMaster(args);
-        var body = master ? master.GetBody() : null;
+        var body = master
+            ? master.GetBody()
+            : null;
         if (!body)
             return;
 
@@ -129,17 +136,23 @@ internal static class WishCommands
 
         var odds = WishOdds.OnRegularDrop(IHaveTooMuchItemBloatPlugin.Settings, run, pool, wish.Pickup);
 
-        return $"{name} ({pool.Name}): {wish.Desperation:0.##} of {odds.GuaranteedAt:0.##} desperation, " +
-               $"{odds.ChanceAt(wish.Desperation):P2} on a regular drop of its tier (natural {odds.NaturalChance:P2}).";
+        return $"{name} ({pool.Name}): {wish.Desperation:0.##} of {odds.GuaranteedAt:0.##} desperation, {odds.ChanceAt(wish.Desperation):P2} on a regular drop of its tier "
+            + $"(natural {odds.NaturalChance:P2}).";
     }
 
     private static string DescribeContentPacks(List<PickupIndex> available)
     {
-        var counts = VanillaContent.ContentPacks
-            .Select(contentPack => $"{contentPack.Replace("RoR2.", "")} {available.Count(pickup => VanillaContent.ContentPackOf(pickup) == contentPack)}");
+        var counts = VanillaContent.ContentPacks.Select(contentPack => DescribeContentPack(contentPack, available));
         var modded = available.Count(pickup => !VanillaContent.Contains(pickup));
 
         return string.Join(", ", counts) + $", modded {modded}";
+    }
+
+    private static string DescribeContentPack(string contentPack, List<PickupIndex> available)
+    {
+        var count = available.Count(pickup => VanillaContent.ContentPackOf(pickup) == contentPack);
+
+        return $"{contentPack.Replace("RoR2.", "")} {count}";
     }
 
     private static string DescribeOdds(Run run, DropPool pool)
@@ -154,6 +167,7 @@ internal static class WishCommands
 
         var odds = WishOdds.OnRegularDrop(IHaveTooMuchItemBloatPlugin.Settings, run, pool, example);
 
-        return $"{header} One item on a regular drop: natural {odds.NaturalChance:P2}, vanilla {odds.VanillaChance:P2}, fresh wish {odds.FreshChance:P2}, guaranteed at {odds.GuaranteedAt:0.##} desperation.";
+        return $"{header} One item on a regular drop: natural {odds.NaturalChance:P2}, vanilla {odds.VanillaChance:P2}, fresh wish {odds.FreshChance:P2}, "
+            + $"guaranteed at {odds.GuaranteedAt:0.##} desperation.";
     }
 }

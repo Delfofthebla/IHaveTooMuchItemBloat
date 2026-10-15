@@ -9,15 +9,12 @@ internal static class WishOffers
 {
     public static Xoroshiro128Plus NewShrineRng() => new(StageRng.ShrineSeeds?.nextUlong ?? 0);
 
-    public static bool CanOfferAnything(Settings settings, Run run)
-        => run && DropPools.Wishable.Any(pool => settings.OfferWeight(pool) > 0f && pool.AvailableIn(run).Count > 0);
+    public static bool CanOfferAnything(Settings settings, Run run) => run && DropPools.Wishable.Any(pool => settings.OfferWeight(pool) > 0f && pool.AvailableIn(run).Count > 0);
 
     public static PickupIndex[] Roll(Settings settings, Run run, Xoroshiro128Plus shrineRng, int playerIndex)
     {
         var rng = PlayerStream(shrineRng, playerIndex);
-        var remaining = DropPools.Wishable
-            .Where(pool => settings.OfferWeight(pool) > 0f)
-            .ToDictionary(pool => pool, pool => pool.AvailableIn(run).OrderBy(pickup => pickup.value).ToList());
+        var remaining = DropPools.Wishable.Where(pool => settings.OfferWeight(pool) > 0f).ToDictionary(pool => pool, pool => AvailableInOrder(pool, run));
 
         var offer = new List<PickupIndex>();
 
@@ -40,6 +37,8 @@ internal static class WishOffers
     public static PickupPickerController.Option[] AsOptions(IEnumerable<PickupIndex> offer)
         => offer.Select(pickup => new PickupPickerController.Option { pickup = new UniquePickup(pickup), available = true }).ToArray();
 
+    private static List<PickupIndex> AvailableInOrder(DropPool pool, Run run) => pool.AvailableIn(run).OrderBy(pickup => pickup.value).ToList();
+
     private static Xoroshiro128Plus PlayerStream(Xoroshiro128Plus shrineRng, int playerIndex)
     {
         var rng = new Xoroshiro128Plus(shrineRng);
@@ -56,6 +55,8 @@ internal static class WishOffers
         foreach (var tier in remaining.Where(tier => tier.Value.Count > 0))
             tiers.AddChoice(tier.Key, settings.OfferWeight(tier.Key));
 
-        return tiers.Count > 0 ? tiers.Evaluate(rng.nextNormalizedFloat) : null;
+        return tiers.Count > 0
+            ? tiers.Evaluate(rng.nextNormalizedFloat)
+            : null;
     }
 }

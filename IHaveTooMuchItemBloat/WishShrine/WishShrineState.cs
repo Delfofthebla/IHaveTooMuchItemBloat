@@ -7,9 +7,9 @@ namespace IHaveTooMuchItemBloat.WishShrine;
 
 internal sealed class WishShrineState : NetworkBehaviour
 {
-    private const uint UsesDirtyBit = 1u;
-    private const uint TermsDirtyBit = 2u;
-    private const uint AllDirtyBits = UsesDirtyBit | TermsDirtyBit;
+    private static readonly uint UsesDirtyBit = 1u;
+    private static readonly uint TermsDirtyBit = 2u;
+    private static readonly uint AllDirtyBits = UsesDirtyBit | TermsDirtyBit;
 
     private readonly Dictionary<NetworkInstanceId, int> _usesBy = [];
     private readonly Dictionary<NetworkInstanceId, PickupIndex[]> _offers = [];
@@ -26,6 +26,8 @@ internal sealed class WishShrineState : NetworkBehaviour
     public static int PlacedCount => InstanceTracker.GetInstancesList<WishShrineState>().Count;
 
     public int WishSlots => _wishSlots;
+
+    public bool UsesSharedPrice => !_usesArePerPlayer;
 
     private void Awake()
     {
@@ -71,8 +73,6 @@ internal sealed class WishShrineState : NetworkBehaviour
     }
 
     public int RaisedPrice(int price) => (int)(price * _costMultiplierPerUse);
-
-    public bool UsesSharedPrice => !_usesArePerPlayer;
 
     public void RecordUseBy(CharacterMaster master)
     {

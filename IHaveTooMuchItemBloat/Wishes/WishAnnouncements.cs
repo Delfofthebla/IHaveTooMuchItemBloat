@@ -5,14 +5,11 @@ namespace IHaveTooMuchItemBloat.Wishes;
 
 internal static class WishAnnouncements
 {
-    public static void Made(CharacterMaster master, bool strengthened)
+    public static void Made(CharacterMaster master, bool strengthened) => Chat.SendBroadcastChat(new Chat.SubjectFormatChatMessage
     {
-        Chat.SendBroadcastChat(new Chat.SubjectFormatChatMessage
-        {
-            subjectAsNetworkUser = Players.NetworkUserOf(master),
-            baseToken = strengthened ? Tokens.WISH_STRENGTHENED : Tokens.WISH_MADE,
-        });
-    }
+        subjectAsNetworkUser = Players.NetworkUserOf(master),
+        baseToken = strengthened ? Tokens.WishStrengthened : Tokens.WishMade,
+    });
 
     public static void Granted(CharacterMaster master, PickupIndex pickup)
     {
@@ -25,7 +22,7 @@ internal static class WishAnnouncements
         Chat.SendBroadcastChat(new Chat.PlayerPickupChatMessage
         {
             subjectAsNetworkUser = Players.NetworkUserOf(master),
-            baseToken = Tokens.WISH_GRANTED,
+            baseToken = Tokens.WishGranted,
             pickupToken = pickupDef.nameToken,
             pickupColor = pickupDef.baseColor,
             pickupQuantity = 1,

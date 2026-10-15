@@ -30,17 +30,16 @@ internal static class DropSourcePatches
     private static void DropFromShopTerminal(Action<ShopTerminalBehavior, bool> orig, ShopTerminalBehavior self, bool isDuplicated)
         => DropRecipient.During(_settings.HiddenShopItemsGrantWishes, () => HiddenItemBuyer(self, isDuplicated), () => self.dropTable, () => orig(self, isDuplicated));
 
-    private static CharacterMaster ChestOpener(ChestBehavior chest)
-        => IsDelusionGuess(chest) ? null : DropRecipient.LastPurchaserOf(chest);
+    private static CharacterMaster ChestOpener(ChestBehavior chest) => IsDelusionGuess(chest)
+        ? null
+        : DropRecipient.LastPurchaserOf(chest);
 
     private static bool IsDelusionGuess(ChestBehavior chest)
-        => DelusionChestController.isDelusionEnable
-        && chest.TryGetComponent(out DelusionChestController delusion)
-        && delusion.SelectedPickupIndex != PickupIndex.none;
+        => DelusionChestController.isDelusionEnable && chest.TryGetComponent(out DelusionChestController delusion) && delusion.SelectedPickupIndex != PickupIndex.none;
 
-    private static PickupDropTable ShrineOfChanceTable(ShrineChanceBehavior shrine)
-        => shrine.chanceDollWin ? shrine.chanceDollDropTable : shrine.dropTable;
+    private static PickupDropTable ShrineOfChanceTable(ShrineChanceBehavior shrine) => shrine.chanceDollWin ? shrine.chanceDollDropTable : shrine.dropTable;
 
-    private static CharacterMaster HiddenItemBuyer(ShopTerminalBehavior terminal, bool isDuplicated)
-        => !isDuplicated && terminal.pickupIndexIsHidden ? DropRecipient.LastPurchaserOf(terminal) : null;
+    private static CharacterMaster HiddenItemBuyer(ShopTerminalBehavior terminal, bool isDuplicated) => !isDuplicated && terminal.pickupIndexIsHidden
+        ? DropRecipient.LastPurchaserOf(terminal)
+        : null;
 }

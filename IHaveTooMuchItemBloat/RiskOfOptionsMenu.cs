@@ -16,11 +16,11 @@ namespace IHaveTooMuchItemBloat;
 
 internal static class RiskOfOptionsMenu
 {
-    public const string Guid = "com.rune580.riskofoptions";
+    public const string GUID = "com.rune580.riskofoptions";
 
     public static void Register(BaseUnityPlugin plugin, ManualLogSource log, Func<ConfigEntryBase, bool> isHidden = null)
     {
-        if (!Chainloader.PluginInfos.ContainsKey(Guid))
+        if (!Chainloader.PluginInfos.ContainsKey(GUID))
             return;
 
         try

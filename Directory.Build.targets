@@ -11,7 +11,7 @@
   <Target Name="VerifyVersions" BeforeTargets="Build" Condition="'$(IsThunderstorePackage)' == 'true'">
     <PropertyGroup>
       <ManifestVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(ThunderstoreSourceDir)\manifest.json')), '"version_number"\s*:\s*"([^"]*)"').Result('$1'))</ManifestVersion>
-      <PluginVersion Condition="'$(PluginVersionSource)' != ''">$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\$(PluginVersionSource)')), 'const string Version = "([^"]*)"').Result('$1'))</PluginVersion>
+      <PluginVersion Condition="'$(PluginVersionSource)' != ''">$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\$(PluginVersionSource)')), 'const string VERSION = "([^"]*)"').Result('$1'))</PluginVersion>
     </PropertyGroup>
     <Error Condition="'$(ManifestVersion)' != '$(Version)'" Text="manifest.json version_number ($(ManifestVersion)) does not match the project Version ($(Version))." />
     <Error Condition="'$(PluginVersionSource)' != '' And '$(PluginVersion)' != '$(Version)'" Text="$(PluginVersionSource) Version ($(PluginVersion)) does not match the project Version ($(Version))." />

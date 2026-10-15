@@ -6,12 +6,14 @@ namespace IHaveTooMuchItemBloat.Pools;
 internal readonly struct WishOdds
 {
     private readonly float _vanillaOddsMultiplier;
-    
+
     public float NaturalChance { get; }
     public float VanillaChance { get; }
     public float GuaranteedAt { get; }
     public float DesperationPerMiss { get; }
-    public float FreshChance => NaturalChance > 0f ? Math.Max(NaturalChance, Math.Min(1f, VanillaChance * _vanillaOddsMultiplier)) : 0f;
+    public float FreshChance => NaturalChance > 0f
+        ? Math.Max(NaturalChance, Math.Min(1f, VanillaChance * _vanillaOddsMultiplier))
+        : 0f;
 
     public WishOdds(Settings settings, DropPool tier, DropTableWeights sourceTier, DropTableWeights wholeTier, PickupIndex pickup)
     {
@@ -21,7 +23,9 @@ internal readonly struct WishOdds
         _vanillaOddsMultiplier = settings.VanillaOddsPercent.Value / 100f;
 
         var wholeTierChance = wholeTier.NaturalChance(pickup);
-        DesperationPerMiss = wholeTierChance > 0f ? NaturalChance / wholeTierChance : 1f;
+        DesperationPerMiss = wholeTierChance > 0f
+            ? NaturalChance / wholeTierChance
+            : 1f;
     }
 
     public static WishOdds OnRegularDrop(Settings settings, Run run, DropPool tier, PickupIndex pickup)
@@ -37,11 +41,14 @@ internal readonly struct WishOdds
         if (fresh <= 0f)
             return 0f;
 
-        var progress = GuaranteedAt > 0f ? Math.Min(1f, desperation / GuaranteedAt) : 0f;
+        var progress = GuaranteedAt > 0f
+            ? Math.Min(1f, desperation / GuaranteedAt)
+            : 0f;
 
         return (float)Math.Pow(fresh, 1f - progress);
     }
 
-    public float SwapChanceAt(float desperation)
-        => NaturalChance < 1f ? Math.Max(0f, (ChanceAt(desperation) - NaturalChance) / (1f - NaturalChance)) : 0f;
+    public float SwapChanceAt(float desperation) => NaturalChance < 1f
+        ? Math.Max(0f, (ChanceAt(desperation) - NaturalChance) / (1f - NaturalChance))
+        : 0f;
 }

@@ -47,14 +47,20 @@ internal sealed class DropTableWeights
 
     public bool CanDrop(PickupIndex pickup) => WeightOf(pickup) > 0f;
 
-    public float NaturalChance(PickupIndex pickup) => _totalWeight > 0f ? WeightOf(pickup) / _totalWeight : 0f;
+    public float NaturalChance(PickupIndex pickup) => _totalWeight > 0f
+        ? WeightOf(pickup) / _totalWeight
+        : 0f;
 
     public float VanillaChance(PickupIndex pickup)
     {
         var weight = WeightOf(pickup);
-        var vanillaWeight = VanillaContent.Contains(pickup) ? _vanillaWeight : _vanillaWeight + weight;
+        var vanillaWeight = VanillaContent.Contains(pickup)
+            ? _vanillaWeight
+            : _vanillaWeight + weight;
 
-        return vanillaWeight > 0f ? weight / vanillaWeight : 0f;
+        return vanillaWeight > 0f
+            ? weight / vanillaWeight
+            : 0f;
     }
 
     private static WeightedSelection<UniquePickup> SelectionOf(PickupDropTable table) => table switch
@@ -65,7 +71,9 @@ internal sealed class DropTableWeights
         _ => null,
     };
 
-    private float WeightOf(PickupIndex pickup) => _weights.TryGetValue(pickup, out var weight) ? weight : 0f;
+    private float WeightOf(PickupIndex pickup) => _weights.TryGetValue(pickup, out var weight)
+        ? weight
+        : 0f;
 
     private void Add(PickupIndex pickup, float weight)
     {

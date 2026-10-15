@@ -13,19 +13,19 @@ using RoR2;
 
 namespace IHaveTooMuchItemBloat;
 
-[BepInPlugin(Guid, Name, Version)]
+[BepInPlugin(GUID, NAME, VERSION)]
 [BepInDependency(LanguageAPI.PluginGUID)]
 [BepInDependency(PrefabAPI.PluginGUID)]
 [BepInDependency(DirectorAPI.PluginGUID)]
 [BepInDependency(ItemAPI.PluginGUID)]
-[BepInDependency(RiskOfOptionsMenu.Guid, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(RiskOfOptionsMenu.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
 // ReSharper disable once InconsistentNaming
 public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
 {
-    public const string Guid = "com.Delfofthebla.IHaveTooMuchItemBloat";
-    public const string Name = "IHaveTooMuchItemBloat";
-    public const string Version = "1.0.0";
+    public const string GUID = "com.Delfofthebla.IHaveTooMuchItemBloat";
+    public const string NAME = "IHaveTooMuchItemBloat";
+    public const string VERSION = "1.0.0";
 
     internal static ManualLogSource Log { get; private set; }
     internal static Settings Settings { get; private set; }
@@ -70,6 +70,5 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
         WishShrineSpawnOdds.Install(Settings);
     }
 
-    private static void AnnounceGrantedWish(CharacterMaster master, PickupIndex pickup)
-        => Failsafe.Run("announcing a granted wish", () => WishAnnouncements.Granted(master, pickup));
+    private static void AnnounceGrantedWish(CharacterMaster master, PickupIndex pickup) => Failsafe.Run("announcing a granted wish", () => WishAnnouncements.Granted(master, pickup));
 }

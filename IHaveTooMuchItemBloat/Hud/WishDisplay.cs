@@ -11,8 +11,8 @@ namespace IHaveTooMuchItemBloat.Hud;
 
 internal sealed class WishDisplay : MonoBehaviour
 {
-    private const float IconSize = 36f;
-    private const float RefreshInterval = 0.25f;
+    private static readonly float IconSize = 36f;
+    private static readonly float RefreshInterval = 0.25f;
 
     private readonly List<GameObject> _icons = [];
     private List<Wish> _shownWishes = [];
@@ -88,7 +88,7 @@ internal sealed class WishDisplay : MonoBehaviour
         label.SetActive(true);
 
         if (label.TryGetComponent(out TextMeshProUGUI text))
-            text.text = Language.GetString(Tokens.HUD_LABEL);
+            text.text = Language.GetString(Tokens.HudLabel);
     }
 
     private GameObject CreateIcon(Wish wish)
@@ -110,7 +110,7 @@ internal sealed class WishDisplay : MonoBehaviour
         tooltip.titleToken = pickupDef.nameToken;
         tooltip.titleColor = pickupDef.darkColor;
         tooltip.bodyToken = DescriptionTokenOf(pickupDef);
-        tooltip.overrideBodyText = Language.GetString(tooltip.bodyToken) + "\n\n" + Language.GetStringFormatted(Tokens.HUD_DESPERATION, wish.Desperation.ToString("0.##"));
+        tooltip.overrideBodyText = Language.GetString(tooltip.bodyToken) + "\n\n" + Language.GetStringFormatted(Tokens.HudDesperation, wish.Desperation.ToString("0.##"));
 
         return icon;
     }

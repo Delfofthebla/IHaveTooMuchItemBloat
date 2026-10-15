@@ -24,6 +24,7 @@ internal static class DropRecipient
 
         var previousRecipient = Current;
         var previousTable = _currentTable;
+
         Current = Failsafe.Run("finding a drop's recipient", recipient, null);
         _currentTable = table;
 
@@ -38,5 +39,7 @@ internal static class DropRecipient
         }
     }
 
-    public static CharacterMaster LastPurchaserOf(Component container) => container.TryGetComponent(out PurchaseInteraction purchase) ? Players.MasterOf(purchase.lastActivator) : null;
+    public static CharacterMaster LastPurchaserOf(Component container) => container.TryGetComponent(out PurchaseInteraction purchase)
+        ? Players.MasterOf(purchase.lastActivator)
+        : null;
 }

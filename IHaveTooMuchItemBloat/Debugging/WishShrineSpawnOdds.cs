@@ -12,11 +12,7 @@ internal static class WishShrineSpawnOdds
     {
         _settings = settings;
 
-        Hooks.Install(
-            typeof(SceneDirector),
-            nameof(SceneDirector.GenerateInteractableCardSelection),
-            [],
-            LogShrineOdds);
+        Hooks.Install(typeof(SceneDirector), nameof(SceneDirector.GenerateInteractableCardSelection), [], LogShrineOdds);
     }
 
     private static WeightedSelection<DirectorCard> LogShrineOdds(Func<SceneDirector, WeightedSelection<DirectorCard>> orig, SceneDirector self)
@@ -50,10 +46,12 @@ internal static class WishShrineSpawnOdds
 
         var pickChance = shrineWeight / totalWeight;
         var averageCost = weightedCost / totalWeight;
-        var picks = averageCost > 0f ? credits / averageCost : 0f;
+        var picks = averageCost > 0f
+            ? credits / averageCost
+            : 0f;
         var atLeastOne = 1f - Math.Pow(1f - pickChance, picks);
 
-        return $"Wish Shrine on {scene}: {pickChance:P2} of each interactable pick ({selection.Count} choices). " +
-               $"With {credits} credits at about {averageCost:F1} per pick, that is about {picks:F0} picks and a {atLeastOne:P0} chance of at least one.";
+        return $"Wish Shrine on {scene}: {pickChance:P2} of each interactable pick ({selection.Count} choices). "
+            + $"With {credits} credits at about {averageCost:F1} per pick, that is about {picks:F0} picks and a {atLeastOne:P0} chance of at least one.";
     }
 }

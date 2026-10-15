@@ -27,8 +27,7 @@ internal static class WishShrinePurchase
         return installed.All(hooked => hooked);
     }
 
-    public static bool TryPay(PurchaseInteraction purchase, Interactor interactor, CharacterMaster master)
-        => WithPriceFor(purchase, master, () => Pay(purchase, interactor));
+    public static bool TryPay(PurchaseInteraction purchase, Interactor interactor, CharacterMaster master) => WithPriceFor(purchase, master, () => Pay(purchase, interactor));
 
     private static bool Pay(PurchaseInteraction purchase, Interactor interactor)
     {
@@ -135,7 +134,12 @@ internal static class WishShrinePurchase
         WithPriceFor(self, viewerMaster, () => orig(self, hologramContent, viewer));
     }
 
-    private static void ProcOnlyOnWishes(Action<GlobalEventManager, Interactor, IInteractable, GameObject> orig, GlobalEventManager self, Interactor interactor, IInteractable interactable, GameObject interactableObject)
+    private static void ProcOnlyOnWishes(
+        Action<GlobalEventManager, Interactor, IInteractable, GameObject> orig,
+        GlobalEventManager self,
+        Interactor interactor,
+        IInteractable interactable,
+        GameObject interactableObject)
     {
         var openingWishShrine = !_paying && interactableObject && interactableObject.TryGetComponent(out WishShrineState _);
         if (openingWishShrine)
@@ -158,25 +162,30 @@ internal static class WishShrinePurchase
 
     private static PurchaseInteraction PingedWishShrine(PingIndicator ping)
     {
-        var purchase = ping.pingTarget ? ping.pingTarget.GetComponent<PurchaseInteraction>() : null;
+        var purchase = ping.pingTarget
+            ? ping.pingTarget.GetComponent<PurchaseInteraction>()
+            : null;
 
-        return purchase && IsWishShrine(purchase) ? purchase : null;
+        return purchase && IsWishShrine(purchase)
+            ? purchase
+            : null;
     }
 
-    private static CharacterMaster PingerOf(PingIndicator ping)
-        => ping.pingOwner ? ping.pingOwner.GetComponent<CharacterMaster>() : null;
+    private static CharacterMaster PingerOf(PingIndicator ping) => ping.pingOwner
+        ? ping.pingOwner.GetComponent<CharacterMaster>()
+        : null;
 
     private static bool IsWishShrine(Component component) => component.TryGetComponent(out WishShrineState _);
 
-    private static int PriceFor(PurchaseInteraction purchase, CharacterMaster master)
-        => purchase.TryGetComponent(out WishShrineState state) ? state.PriceFor(master, purchase.cost) : purchase.cost;
+    private static int PriceFor(PurchaseInteraction purchase, CharacterMaster master) => purchase.TryGetComponent(out WishShrineState state)
+        ? state.PriceFor(master, purchase.cost)
+        : purchase.cost;
 
-    private static void WithPriceFor(PurchaseInteraction purchase, CharacterMaster master, Action action)
-        => WithPriceFor(purchase, master, () =>
-        {
-            action();
-            return true;
-        });
+    private static void WithPriceFor(PurchaseInteraction purchase, CharacterMaster master, Action action) => WithPriceFor(purchase, master, () =>
+    {
+        action();
+        return true;
+    });
 
     private static T WithPriceFor<T>(PurchaseInteraction purchase, CharacterMaster master, Func<T> action)
     {

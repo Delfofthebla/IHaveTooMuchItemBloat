@@ -13,7 +13,9 @@ internal sealed class WishRegistry
     {
         var inventory = master ? master.inventory : null;
 
-        return inventory ? WishStorage.Read(inventory) : [];
+        return inventory
+            ? WishStorage.Read(inventory)
+            : [];
     }
 
     public void Set(CharacterMaster master, IEnumerable<Wish> wishes)
@@ -22,7 +24,7 @@ internal sealed class WishRegistry
         if (!inventory)
             return;
 
-        WishStorage.Write(inventory, [.. wishes.Take(WishStorage.CAPACITY)]);
+        WishStorage.Write(inventory, [.. wishes.Take(WishStorage.Capacity)]);
     }
 
     public void Place(CharacterMaster master, int slot, PickupIndex pickup)
@@ -38,8 +40,7 @@ internal sealed class WishRegistry
         Set(master, wishes);
     }
 
-    public void AddDesperation(CharacterMaster master, PickupIndex pickup, float desperation)
-        => Update(master, pickup, wish => wish.WithDesperation(wish.Desperation + desperation));
+    public void AddDesperation(CharacterMaster master, PickupIndex pickup, float desperation) => Update(master, pickup, wish => wish.WithDesperation(wish.Desperation + desperation));
 
     public void Forget(CharacterMaster master) => Set(master, []);
 
@@ -61,6 +62,9 @@ internal sealed class WishRegistry
         Granted?.Invoke(master, pickup);
     }
 
-    private void Update(CharacterMaster master, PickupIndex pickup, Func<Wish, Wish> change)
-        => Set(master, Of(master).Select(wish => wish.Pickup == pickup ? change(wish) : wish));
+    private void Update(CharacterMaster master, PickupIndex pickup, Func<Wish, Wish> change) => Set(master, Of(master).Select(wish => ChangedIfMatching(wish, pickup, change)));
+
+    private static Wish ChangedIfMatching(Wish wish, PickupIndex pickup, Func<Wish, Wish> change) => wish.Pickup == pickup
+        ? change(wish)
+        : wish;
 }

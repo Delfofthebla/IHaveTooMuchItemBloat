@@ -9,7 +9,9 @@ internal static class PickupNames
     {
         var pickupDef = PickupCatalog.GetPickupDef(pickup);
 
-        return pickupDef != null ? Language.GetString(pickupDef.nameToken) : pickup.ToString();
+        return pickupDef != null
+            ? Language.GetString(pickupDef.nameToken)
+            : pickup.ToString();
     }
 
     public static PickupIndex Find(string name)
@@ -31,6 +33,7 @@ internal static class PickupNames
         return null;
     }
 
-    private static string Compact(string name)
-        => name == null ? null : new string(name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+    private static string Compact(string name) => name == null
+        ? null
+        : new string(name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
 }

@@ -7,9 +7,9 @@ namespace IHaveTooMuchItemBloat.WishShrine;
 internal static class WishShrineSpawning
 {
     // R2API matches categories by substring, so this name must not contain or be contained in another category's name (such as "Shrines").
-    private const string CategoryName = "Wishes";
+    private static readonly string CategoryName = "Wishes";
 
-    private const string GildedCoastScene = "goldshores";
+    private static readonly string GildedCoastScene = "goldshores";
 
     private static Settings _settings;
     private static DirectorCard _card;

@@ -21,7 +21,11 @@ internal static class PickupDropletPatch
             ApplyRecipientsWishes);
     }
 
-    private static void ApplyRecipientsWishes(Action<GenericPickupController.CreatePickupInfo, Vector3, Vector3> orig, GenericPickupController.CreatePickupInfo pickupInfo, Vector3 position, Vector3 velocity)
+    private static void ApplyRecipientsWishes(
+        Action<GenericPickupController.CreatePickupInfo, Vector3, Vector3> orig,
+        GenericPickupController.CreatePickupInfo pickupInfo,
+        Vector3 position,
+        Vector3 velocity)
     {
         if (DropRecipient.Current)
         {

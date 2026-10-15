@@ -4,37 +4,37 @@ namespace IHaveTooMuchItemBloat;
 
 internal static class Tokens
 {
-    private const string Prefix = "IHAVETOOMUCHITEMBLOAT_";
-    private const string SelfSuffix = "_2P";
+    private static readonly string Prefix = "IHAVETOOMUCHITEMBLOAT_";
+    private static readonly string SelfSuffix = "_2P";
 
-    public const string WISH_ENTRY_NAME = Prefix + "WISH_ENTRY_NAME";
-    public const string WISH_SHRINE_NAME = Prefix + "WISH_SHRINE_NAME";
-    public const string WISH_SHRINE_CONTEXT = Prefix + "WISH_SHRINE_CONTEXT";
-    public const string PANEL_TITLE = Prefix + "WISH_PANEL_TITLE";
-    public const string CONFIRM_WISH = Prefix + "WISH_PANEL_CONFIRM";
-    public const string CONFIRM_STRENGTHEN = Prefix + "WISH_PANEL_CONFIRM_STRENGTHEN";
-    public const string CONFIRM_REPLACE = Prefix + "WISH_PANEL_CONFIRM_REPLACE";
-    public const string WISH_MADE = Prefix + "WISH_MADE";
-    public const string WISH_STRENGTHENED = Prefix + "WISH_STRENGTHENED";
-    public const string WISH_GRANTED = Prefix + "WISH_GRANTED";
-    public const string HUD_LABEL = Prefix + "WISH_HUD_LABEL";
-    public const string HUD_DESPERATION = Prefix + "WISH_HUD_DESPERATION";
+    public static readonly string WishEntryName = Prefix + "WISH_ENTRY_NAME";
+    public static readonly string WishShrineName = Prefix + "WISH_SHRINE_NAME";
+    public static readonly string WishShrineContext = Prefix + "WISH_SHRINE_CONTEXT";
+    public static readonly string PanelTitle = Prefix + "WISH_PANEL_TITLE";
+    public static readonly string ConfirmWish = Prefix + "WISH_PANEL_CONFIRM";
+    public static readonly string ConfirmStrengthen = Prefix + "WISH_PANEL_CONFIRM_STRENGTHEN";
+    public static readonly string ConfirmReplace = Prefix + "WISH_PANEL_CONFIRM_REPLACE";
+    public static readonly string WishMade = Prefix + "WISH_MADE";
+    public static readonly string WishStrengthened = Prefix + "WISH_STRENGTHENED";
+    public static readonly string WishGranted = Prefix + "WISH_GRANTED";
+    public static readonly string HudLabel = Prefix + "WISH_HUD_LABEL";
+    public static readonly string HudDesperation = Prefix + "WISH_HUD_DESPERATION";
 
     public static void Register()
     {
-        LanguageAPI.Add(WISH_ENTRY_NAME, "Wish");
-        LanguageAPI.Add(WISH_SHRINE_NAME, "Shrine of Wishes");
-        LanguageAPI.Add(WISH_SHRINE_CONTEXT, "Make a wish");
-        LanguageAPI.Add(PANEL_TITLE, "Make a Wish");
-        LanguageAPI.Add(CONFIRM_WISH, "Wish");
-        LanguageAPI.Add(CONFIRM_STRENGTHEN, "Strengthen");
-        LanguageAPI.Add(CONFIRM_REPLACE, "Replace");
-        LanguageAPI.Add(HUD_LABEL, "Wishes:");
-        LanguageAPI.Add(HUD_DESPERATION, "<style=cShrine>Desperation: {0}</style>");
+        LanguageAPI.Add(WishEntryName, "Wish");
+        LanguageAPI.Add(WishShrineName, "Shrine of Wishes");
+        LanguageAPI.Add(WishShrineContext, "Make a wish");
+        LanguageAPI.Add(PanelTitle, "Make a Wish");
+        LanguageAPI.Add(ConfirmWish, "Wish");
+        LanguageAPI.Add(ConfirmStrengthen, "Strengthen");
+        LanguageAPI.Add(ConfirmReplace, "Replace");
+        LanguageAPI.Add(HudLabel, "Wishes:");
+        LanguageAPI.Add(HudDesperation, "<style=cShrine>Desperation: {0}</style>");
 
-        AddChatMessage(WISH_MADE, "<style=cShrine>{0} made a wish.</style>", "<style=cShrine>You made a wish.</style>");
-        AddChatMessage(WISH_STRENGTHENED, "<style=cShrine>{0} strengthened a wish.</style>", "<style=cShrine>You strengthened a wish.</style>");
-        AddChatMessage(WISH_GRANTED, "<style=cShrine>{0}'s wish was granted:</style> {1}", "<style=cShrine>Your wish was granted:</style> {1}");
+        AddChatMessage(WishMade, "<style=cShrine>{0} made a wish.</style>", "<style=cShrine>You made a wish.</style>");
+        AddChatMessage(WishStrengthened, "<style=cShrine>{0} strengthened a wish.</style>", "<style=cShrine>You strengthened a wish.</style>");
+        AddChatMessage(WishGranted, "<style=cShrine>{0}'s wish was granted:</style> {1}", "<style=cShrine>Your wish was granted:</style> {1}");
     }
 
     private static void AddChatMessage(string token, string text, string textForSelf)
