@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IHaveTooMuchItemBloat.Ledger;
+using IHaveTooMuchItemBloat.Pools;
 using RoR2;
 
 namespace IHaveTooMuchItemBloat.Wishes;
@@ -40,6 +41,12 @@ internal sealed class WishRegistry
     }
 
     public void AddDesperation(CharacterMaster master, PickupIndex pickup, float desperation) => Update(master, pickup, wish => wish.WithDesperation(wish.Desperation + desperation));
+
+    public void Decline(CharacterMaster master, PickupIndex pickup)
+    {
+        IHaveTooMuchItemBloatPlugin.Log.LogInfo($"{Players.NameOf(master)}'s wish for {PickupNames.Display(pickup)} was passed over; it starts over.");
+        Update(master, pickup, wish => wish.WithDesperation(0f));
+    }
 
     public void Forget(CharacterMaster master) => Set(master, []);
 

@@ -37,11 +37,13 @@ You can hold 3 wishes at once, of any rarity. Each use of the shrine does one of
 
 ### Wishes
 
-A wish doesn't hand you the item. It is a steadily ramping chance to _swap_ with one of your random drops and become the
+A wish doesn't hand you the item. It is a steadily ramping chance for one of your random drops to come true as the
 desired item. Whenever a chest, a Shrine of Chance, or a "?" shop drops an item of the same rarity as one of your wishes,
-that wish _can_ take its place. Rarity never changes: a common wish only ever replaces a common drop. Only drops that
+that wish _can_ show up: the drop becomes a choice between whatever it rolled and your wished item, so you always see
+what you'd be giving up. Rarity never changes: a common wish only ever shows up on a common drop. Only drops that
 **could** have been the wished item count, so a Healing chest is never going to give you a pair of Lens-Maker's Glasses.
-Sorry bud. Choice containers like a Void Potential can technically grant wishes too, but that's currently off by default.
+Sorry bud. Choice containers like a Void Potential can technically grant wishes too by adding your wish to their
+choices, but that's currently off by default.
 
 A fresh wish's chance is 120% of that item's odds from the same source in an unmodded game, so no matter how bloated the
 pool is, your odds will be just a little bit better than they would in vanilla. As you continue to open chests and fail
@@ -50,7 +52,8 @@ the chance to have it granted climbs higher and higher until it is guaranteed. A
 uncommons, and 8 for legendaries. Category chests count for more, since they narrow the pool. Holding several wishes of
 the same rarity won't make all of them come true any faster either; desperation is evenly split between them.
 
-When a wish comes true, everyone sees it in chat and the wish is used up.
+Take the wished item and everyone sees it in chat and the wish is used up. Take the other item instead and the wish
+sticks around, but its desperation starts over.
 
 ![The wish row on the scoreboard](https://raw.githubusercontent.com/Delfofthebla/IHaveTooMuchItemBloat/master/docs/screenshots/WishHud.png)
 

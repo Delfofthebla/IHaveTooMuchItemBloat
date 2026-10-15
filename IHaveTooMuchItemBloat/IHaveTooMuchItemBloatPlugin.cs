@@ -31,6 +31,7 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
     internal static ManualLogSource Log { get; private set; }
     internal static Settings Settings { get; private set; }
     internal static WishRegistry Wishes { get; private set; }
+    internal static WishChoices Choices { get; private set; }
     internal static WishGranter Granter { get; private set; }
 
     private void Awake()
@@ -38,7 +39,8 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
         Log = Logger;
         Settings = new Settings(Config);
         Wishes = new WishRegistry();
-        Granter = new WishGranter(Settings, Wishes);
+        Choices = new WishChoices(Wishes);
+        Granter = new WishGranter(Settings, Wishes, Choices);
 
         Tokens.Register();
         Wishes.Granted += AnnounceGrantedWish;
@@ -57,6 +59,8 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
     {
         DropSourcePatches.Install(Settings);
         PickupDropletPatch.Install(Granter);
+        PickupPickerPatch.Install(Choices);
+        Choices.Install();
     }
 
     private static void InstallWishShrine()
