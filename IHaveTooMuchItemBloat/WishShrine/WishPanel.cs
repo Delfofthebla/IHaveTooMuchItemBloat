@@ -74,10 +74,7 @@ internal sealed class WishPanel : MonoBehaviour
 
         var icon = IconOf(slot);
         if (icon)
-        {
-            icon.sprite = pickupDef?.iconSprite;
-            icon.enabled = icon.sprite;
-        }
+            ShowIcon(icon, pickupDef);
 
         var tierColor = pickupDef != null
             ? pickupDef.baseColor
@@ -96,7 +93,7 @@ internal sealed class WishPanel : MonoBehaviour
             focusOutlineImage.color = focused ? WishShrineAssets.WishColor : Color.clear;
     }
 
-    private static Image IconOf(MPButton slot)
+    private static AsyncImage IconOf(MPButton slot)
     {
         var childLocator = slot.GetComponent<ChildLocator>();
         var icon = childLocator
@@ -104,8 +101,22 @@ internal sealed class WishPanel : MonoBehaviour
             : null;
 
         return icon
-            ? icon.GetComponent<Image>()
+            ? icon.GetComponent<AsyncImage>()
             : null;
+    }
+
+    private static void ShowIcon(AsyncImage icon, PickupDef pickupDef)
+    {
+        if (pickupDef == null)
+        {
+            icon.Clear();
+            icon.SetRendererEnabled(false);
+            return;
+        }
+
+        icon.disableWhileLoading = true;
+        icon.SetRendererEnabled(true);
+        icon.SetAssetOrDirectReference(pickupDef);
     }
 
     private void ShowPrice()

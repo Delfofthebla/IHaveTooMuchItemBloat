@@ -28,7 +28,7 @@ internal static class WishShrineSpawnOdds
     private static string Describe(WeightedSelection<DirectorCard> selection, int credits)
     {
         var scene = SceneCatalog.mostRecentSceneDef ? SceneCatalog.mostRecentSceneDef.cachedName : "?";
-        var totalWeight = selection.getTotalWeight();
+        var totalWeight = selection.GetTotalWeight();
         var shrineWeight = 0f;
         var weightedCost = 0f;
 
