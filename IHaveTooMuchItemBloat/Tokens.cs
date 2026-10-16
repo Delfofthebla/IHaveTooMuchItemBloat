@@ -7,7 +7,6 @@ internal static class Tokens
     private static readonly string Prefix = "IHAVETOOMUCHITEMBLOAT_";
     private static readonly string SelfSuffix = "_2P";
 
-    public static readonly string WishEntryName = Prefix + "WISH_ENTRY_NAME";
     public static readonly string WishShrineName = Prefix + "WISH_SHRINE_NAME";
     public static readonly string WishShrineContext = Prefix + "WISH_SHRINE_CONTEXT";
     public static readonly string PanelTitle = Prefix + "WISH_PANEL_TITLE";
@@ -22,7 +21,6 @@ internal static class Tokens
 
     public static void Register()
     {
-        LanguageAPI.Add(WishEntryName, "Wish");
         LanguageAPI.Add(WishShrineName, "Shrine of Wishes");
         LanguageAPI.Add(WishShrineContext, "Make a wish");
         LanguageAPI.Add(PanelTitle, "Make a Wish");

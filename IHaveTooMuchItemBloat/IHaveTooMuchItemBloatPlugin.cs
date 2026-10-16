@@ -2,6 +2,7 @@ using BepInEx;
 using BepInEx.Logging;
 using IHaveTooMuchItemBloat.Debugging;
 using IHaveTooMuchItemBloat.Hud;
+using IHaveTooMuchItemBloat.Ledger;
 using IHaveTooMuchItemBloat.Patches;
 using IHaveTooMuchItemBloat.WishShrine;
 using IHaveTooMuchItemBloat.Wishes;
@@ -17,8 +18,8 @@ namespace IHaveTooMuchItemBloat;
 [BepInDependency(LanguageAPI.PluginGUID)]
 [BepInDependency(PrefabAPI.PluginGUID)]
 [BepInDependency(DirectorAPI.PluginGUID)]
-[BepInDependency(ItemAPI.PluginGUID)]
 [BepInDependency(RiskOfOptionsMenu.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(ProperSaveSupport.GUID, BepInDependency.DependencyFlags.SoftDependency)]
 [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
 // ReSharper disable once InconsistentNaming
 public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
@@ -30,6 +31,7 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
     internal static ManualLogSource Log { get; private set; }
     internal static Settings Settings { get; private set; }
     internal static WishRegistry Wishes { get; private set; }
+    internal static WishChoices Choices { get; private set; }
     internal static WishGranter Granter { get; private set; }
 
     private void Awake()
@@ -37,12 +39,14 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
         Log = Logger;
         Settings = new Settings(Config);
         Wishes = new WishRegistry();
-        Granter = new WishGranter(Settings, Wishes);
+        Choices = new WishChoices(Wishes);
+        Granter = new WishGranter(Settings, Wishes, Choices);
 
         Tokens.Register();
-        WishStorage.Register();
         Wishes.Granted += AnnounceGrantedWish;
 
+        Failsafe.Run("installing the run ledger", RunLedger.Install);
+        Failsafe.Run("hooking into ProperSave", ProperSaveSupport.Install);
         Failsafe.Run("hooking the stage RNG", StageRng.Install);
         Failsafe.Run("installing drop patches", InstallDropPatches);
         Failsafe.Run("building the Shrine of Wishes", InstallWishShrine);
@@ -55,6 +59,8 @@ public class IHaveTooMuchItemBloatPlugin : BaseUnityPlugin
     {
         DropSourcePatches.Install(Settings);
         PickupDropletPatch.Install(Granter);
+        PickupPickerPatch.Install(Choices);
+        Choices.Install();
     }
 
     private static void InstallWishShrine()

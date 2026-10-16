@@ -99,8 +99,11 @@ internal sealed class WishDisplay : MonoBehaviour
         icon.transform.SetParent(transform, worldPositionStays: false);
 
         var image = icon.AddComponent<Image>();
-        image.sprite = pickupDef.iconSprite;
         image.preserveAspect = true;
+
+        var asyncImage = icon.AddComponent<AsyncImage>();
+        asyncImage.disableWhileLoading = true;
+        asyncImage.SetAssetOrDirectReference(pickupDef);
 
         var layoutElement = icon.AddComponent<LayoutElement>();
         layoutElement.preferredWidth = IconSize;

@@ -5,14 +5,14 @@ using RoR2;
 
 namespace IHaveTooMuchItemBloat.Wishes;
 
-internal sealed class WishGranter(Settings settings, WishRegistry wishes)
+internal sealed class WishGranter(Settings settings, WishRegistry wishes, WishChoices choices)
 {
     private readonly HashSet<string> _unreadableTableTypes = [];
 
     public GenericPickupController.CreatePickupInfo ApplyWishes(CharacterMaster recipient, PickupDropTable table, GenericPickupController.CreatePickupInfo pickupInfo)
     {
         var run = Run.instance;
-        var held = wishes.Of(recipient);
+        var held = wishes.Of(recipient).Where(wish => !choices.IsOpen(recipient, wish.Pickup)).ToList();
         if (StageRng.WishRolls == null || !run || !table || held.Count == 0)
             return pickupInfo;
 
@@ -36,7 +36,7 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
 
             var candidates = CandidatesFor(run, tier, source, held, rolled);
             if (candidates.Count > 0)
-                return RollSwaps(recipient, table, pickupInfo, slot, rolled[slot], candidates);
+                return RollSwaps(recipient, table, pickupInfo, rolled[slot], candidates);
         }
 
         return pickupInfo;
@@ -58,17 +58,13 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
         CharacterMaster recipient,
         PickupDropTable table,
         GenericPickupController.CreatePickupInfo pickupInfo,
-        int slot,
         PickupIndex rolled,
         List<(Wish Wish, WishOdds Odds)> candidates)
     {
         foreach (var candidate in candidates)
         {
-            if (!RollSwap(recipient, table, rolled, candidate.Wish, candidate.Odds))
-                continue;
-
-            wishes.Grant(recipient, candidate.Wish.Pickup);
-            return WithPickupAt(pickupInfo, slot, candidate.Wish.Pickup);
+            if (RollSwap(recipient, table, rolled, candidate.Wish, candidate.Odds))
+                return choices.Offer(recipient, candidate.Wish.Pickup, pickupInfo);
         }
 
         SpreadDesperation(recipient, candidates);
@@ -165,16 +161,6 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
         return [pickupInfo.pickup.pickupIndex];
     }
 
-    private static GenericPickupController.CreatePickupInfo WithPickupAt(GenericPickupController.CreatePickupInfo pickupInfo, int slot, PickupIndex pickup)
-    {
-        if (pickupInfo.pickerOptions is { Length: > 0 } options)
-            options[slot].pickup = options[slot].pickup.WithPickupIndex(pickup);
-        else
-            pickupInfo.pickup = pickupInfo.pickup.WithPickupIndex(pickup);
-
-        return pickupInfo;
-    }
-
     private void LogRoll(CharacterMaster recipient, PickupDropTable table, PickupIndex rolled, Wish wish, WishOdds odds, float chance, bool granted)
     {
         if (!settings.LogWishRolls.Value)
@@ -183,7 +169,7 @@ internal sealed class WishGranter(Settings settings, WishRegistry wishes)
         IHaveTooMuchItemBloatPlugin.Log.LogInfo(
             $"Wish roll for {Players.NameOf(recipient)} from {table.name}: rolled {PickupNames.Display(rolled)}; "
                 + $"wish for {PickupNames.Display(wish.Pickup)} at {wish.Desperation:0.##} desperation of {odds.GuaranteedAt:0.##} (natural {odds.NaturalChance:P2}, vanilla {odds.VanillaChance:P2}, "
-                + $"wish {odds.ChanceAt(wish.Desperation):P2}, {odds.DesperationPerMiss:0.##} desperation per miss) had a {chance:P2} swap chance and {(granted ? "was granted" : "missed")}.");
+                + $"wish {odds.ChanceAt(wish.Desperation):P2}, {odds.DesperationPerMiss:0.##} desperation per miss) had a {chance:P2} swap chance and {(granted ? "was offered" : "missed")}.");
     }
 
     private void LogNaturalGrant(CharacterMaster recipient, Wish wish, NaturalDropBehavior behavior)

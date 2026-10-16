@@ -28,12 +28,6 @@ internal static class WishCommands
             return;
         }
 
-        if (args.Count > WishStorage.Capacity)
-        {
-            Debug.LogWarning($"At most {WishStorage.Capacity} wishes can be held.");
-            return;
-        }
-
         var pickups = new List<PickupIndex>();
         for (var i = 0; i < args.Count; i++)
         {

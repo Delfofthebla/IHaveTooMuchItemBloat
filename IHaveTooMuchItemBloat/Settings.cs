@@ -158,7 +158,7 @@ internal sealed class Settings
             WishesSection,
             "Natural Drops",
             NaturalDropBehavior.GrantAndPassOn,
-            "What happens when a wished item drops without a wish swapping it in. Ignore: the drop counts as a miss for your other wishes in its tier. "
+            "What happens when a wished item drops on its own, without a wish offering it. Ignore: the drop counts as a miss for your other wishes in its tier. "
                 + "Grant: the wish is granted and its desperation is lost. GrantAndPassOn: the wish is granted and Pass On Percent of its desperation is split among your other wishes in its tier. "
                 + "GrantAndWishAgain: the wish is granted and reset to 0 desperation.");
         PassOnPercent = config.Bind(
@@ -193,7 +193,7 @@ internal sealed class Settings
             DropSourcesSection,
             "Choice Containers",
             false,
-            "Containers offering a choice of items can grant the opener's wishes by adding a wished item to the choices. The wish is granted whether or not it is picked.");
+            "Containers offering a choice of items can grant the opener's wishes by adding a wished item to the choices.");
         ShrinesOfChanceGrantWishes = config.Bind(DropSourcesSection, "Shrines of Chance", true, "Shrine of Chance rewards can grant the user's wishes.");
         HiddenShopItemsGrantWishes = config.Bind(DropSourcesSection, "Hidden Shop Items", true, "Shop terminals showing \"?\" can grant the buyer's wishes.");
     }
@@ -205,7 +205,7 @@ internal sealed class Settings
             "Console Commands",
             false,
             "Enables the itmb_wish, itmb_wish_clear, itmb_wish_odds and itmb_spawn_wish_shrine console commands. The host's setting applies to everyone.");
-        AlwaysGrantWishes = config.Bind(DebugSection, "Always Grant Wishes", false, "Every drop from a tier holding a wished item becomes that item.");
+        AlwaysGrantWishes = config.Bind(DebugSection, "Always Grant Wishes", false, "Every drop from a tier holding a wished item offers that item.");
         LogWishRolls = config.Bind(DebugSection, "Log Wish Rolls", false, "Logs every wish roll.");
         LogWishShrineSpawnOdds = config.Bind(DebugSection, "Log Wish Shrine Spawn Odds", false, "Logs each stage's chance of spawning a Wish Shrine.");
     }
